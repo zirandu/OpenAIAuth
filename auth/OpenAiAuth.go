@@ -83,6 +83,7 @@ func NewAuthDetails(challenge string) AuthRequest {
 	}
 }
 
+// 新的认证，输入email和password
 func NewAuthenticator(emailAddress, password, proxy string) *Authenticator {
 	auth := &Authenticator{
 		EmailAddress: emailAddress,
@@ -117,9 +118,10 @@ func (auth *Authenticator) URLEncode(str string) string {
 
 func (auth *Authenticator) Begin() *Error {
 	// Just realized that the client id is hardcoded in the JS file
-
 	return auth.partOne()
 }
+
+// One
 func (auth *Authenticator) partOne() *Error {
 
 	auth_url := "https://auth0.openai.com/authorize"
@@ -172,6 +174,7 @@ func (auth *Authenticator) partOne() *Error {
 	}
 }
 
+// Two
 func (auth *Authenticator) partTwo(url string) *Error {
 
 	headers := map[string]string{
@@ -210,6 +213,8 @@ func (auth *Authenticator) partTwo(url string) *Error {
 
 	}
 }
+
+// Three
 func (auth *Authenticator) partThree(state string) *Error {
 
 	url := fmt.Sprintf("https://auth0.openai.com/u/login/identifier?state=%s", state)
@@ -251,6 +256,8 @@ func (auth *Authenticator) partThree(state string) *Error {
 	}
 
 }
+
+// Four
 func (auth *Authenticator) partFour(state string) *Error {
 
 	url := fmt.Sprintf("https://auth0.openai.com/u/login/password?state=%s", state)
@@ -292,6 +299,8 @@ func (auth *Authenticator) partFour(state string) *Error {
 	}
 
 }
+
+// Five
 func (auth *Authenticator) partFive(oldState string, redirectURL string) *Error {
 
 	url := "https://auth0.openai.com" + redirectURL
@@ -326,6 +335,8 @@ func (auth *Authenticator) partFive(oldState string, redirectURL string) *Error 
 	}
 
 }
+
+// Six
 func (auth *Authenticator) partSix() *Error {
 	code := regexp.MustCompile(`code=(.*)&`).FindStringSubmatch(auth.URL)
 	if len(code) == 0 {
